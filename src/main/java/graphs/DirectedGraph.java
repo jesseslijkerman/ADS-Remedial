@@ -48,11 +48,15 @@ public class DirectedGraph<V extends Identifiable, E> {
     public V addOrGetVertex(V newVertex) {
         // TODO add and return the newVertex, or return the existing duplicate vertex with the same Id
         //  pay attention to sustaining representation invariant items 1. and 4.
-        this.vertices.put(newVertex.getId(), newVertex);
-        this.edges.put(newVertex, new HashMap<>());
+        boolean isDuplicate = this.vertices.containsKey(newVertex.getId());
+
+        if (!isDuplicate){
+            this.vertices.put(newVertex.getId(), newVertex);
+            this.edges.put(newVertex, new HashMap<>());
+        }
 
         // a proper vertex shall be returned at all times
-        return null;
+        return getVertexById(newVertex.getId());
     }
 
     /**
@@ -67,6 +71,7 @@ public class DirectedGraph<V extends Identifiable, E> {
         if (fromVertex == null) return null;
 
         // TODO retrieve the collection of neighbour vertices of fromVertex out of the edges data structure
+        this.edges.get(fromVertex);
 
         return null;
     }
@@ -87,6 +92,12 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public boolean addEdge(V fromVertex, V toVertex, E newEdge) {
         // TODO add (directed) newEdge to the graph between fromVertex and toVertex
+        addOrGetVertex(fromVertex);
+        addOrGetVertex(toVertex);
+
+        HashMap destination = new HashMap<V,E>();
+        destination.put(toVertex, newEdge);
+        this.edges.put(fromVertex, destination);
 
         return false;
     }

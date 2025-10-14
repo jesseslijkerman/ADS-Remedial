@@ -1,9 +1,11 @@
 package route_planner;
 
+import graphs.Identifiable;
+
 import java.io.PrintStream;
 import java.util.Locale;
 
-public class Junction
+public class Junction implements Identifiable
         // TODO extend superclass and/or implement interfaces
 
 {
@@ -105,6 +107,11 @@ public class Junction
                 this.getLocationX(), -this.getLocationY(),
                 from.getLocationX(), -from.getLocationY(),
                 width, colour);
+    }
+
+    @Override
+    public String getId() {
+        return null;
     }
 
     /**
