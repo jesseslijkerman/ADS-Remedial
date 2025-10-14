@@ -68,7 +68,7 @@ public class DirectedGraph<V extends Identifiable, E> {
      * an empty collection if fromVertex has no neighbours
      */
     public Collection<V> getNeighbours(V fromVertex) {
-        if (fromVertex == null) return null;
+        if (fromVertex == null || !this.vertices.containsKey(fromVertex.getId())) return null;
         Collection<V> neighbours = new ArrayList<>();
 
         this.edges.get(fromVertex).forEach((v1, e2)  -> {
@@ -97,6 +97,7 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public boolean addEdge(V fromVertex, V toVertex, E newEdge) {
         // TODO add (directed) newEdge to the graph between fromVertex and toVertex
+        if (fromVertex == null || toVertex == null || newEdge == null) return false;
         // Make sure both vertices are part of the graph
         fromVertex = addOrGetVertex(fromVertex);
         toVertex = addOrGetVertex(toVertex);
@@ -126,8 +127,12 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public boolean addEdge(String fromId, String toId, E newEdge) {
         // TODO add (directed) newEdge to the graph between fromId and toId
+        V fromVertex = getVertexById(fromId);
+        V toVertex = getVertexById(toId);
 
-        return false;
+        if (fromVertex == null || toVertex == null) return false;
+
+        return addEdge(fromVertex, toVertex, newEdge);
     }
 
     /**
@@ -140,11 +145,16 @@ public class DirectedGraph<V extends Identifiable, E> {
      * an empty collection if fromVertex has no out-going edges
      */
     public Collection<E> getEdges(V fromVertex) {
-        if (fromVertex == null) return null;
+        if (fromVertex == null || !this.vertices.containsKey(fromVertex.getId())) return null;
 
         // TODO retrieve the collection of out-going edges which connect fromVertex with a neighbour in the edges data structure
+        Collection<E> vertexEdges = new ArrayList<>();
 
-        return null;
+        this.edges.get(fromVertex).forEach((v1, e2)  -> {
+            vertexEdges.add(e2);
+        });
+
+        return vertexEdges;
     }
 
     public Collection<E> getEdges(String fromId) {
@@ -162,6 +172,7 @@ public class DirectedGraph<V extends Identifiable, E> {
     public E getEdge(V fromVertex, V toVertex) {
         if (fromVertex == null || toVertex == null) return null;
         // TODO retrieve the directed edge between vertices fromVertex and toVertex from the graph
+
 
         return null;
     }
