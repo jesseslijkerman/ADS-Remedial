@@ -170,9 +170,15 @@ public class DirectedGraph<V extends Identifiable, E> {
      * returns null if no connection has been set up between these vertices in the specified direction
      */
     public E getEdge(V fromVertex, V toVertex) {
+
+        // Return null if either vertex is null or not in the graph
         if (fromVertex == null || toVertex == null) return null;
         // TODO retrieve the directed edge between vertices fromVertex and toVertex from the graph
 
+        // Check if both vertices exist in the graph otherwise return null
+        if (this.vertices.containsKey(fromVertex.getId()) && this.vertices.containsKey(toVertex.getId())) {
+            return this.edges.get(fromVertex).get(toVertex);
+        }
 
         return null;
     }
@@ -222,8 +228,10 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public int getNumEdges() {
         // TODO calculate and return the total number of directed edges in the graph
-
-        return 0;
+        // a stream is helpful to sum up the sizes of all nested maps in edges
+        // mapToInt(Map::size) is a good way to convert a stream of maps into a stream of their sizes
+        // sum() will then add up all these sizes to a total number of edges
+        return edges.values().stream().mapToInt(Map::size).sum();
     }
 
     /**
