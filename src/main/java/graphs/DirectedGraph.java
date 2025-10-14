@@ -126,8 +126,12 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public boolean addEdge(String fromId, String toId, E newEdge) {
         // TODO add (directed) newEdge to the graph between fromId and toId
+        V fromVertex = getVertexById(fromId);
+        V toVertex = getVertexById(toId);
 
-        return false;
+        if (fromVertex == null || toVertex == null) return false;
+
+        return addEdge(fromVertex, toVertex, newEdge);
     }
 
     /**
