@@ -97,14 +97,21 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public boolean addEdge(V fromVertex, V toVertex, E newEdge) {
         // TODO add (directed) newEdge to the graph between fromVertex and toVertex
-        addOrGetVertex(fromVertex);
-        addOrGetVertex(toVertex);
+        // Make sure both vertices are part of the graph
+        fromVertex = addOrGetVertex(fromVertex);
+        toVertex = addOrGetVertex(toVertex);
 
-        HashMap destination = new HashMap<V,E>();
+        // Grab inner map that stores outgoing edges from this vertex
+        // This is a reference to the map stored in 'edges'
+        Map<V, E> destination = edges.get(fromVertex);
+
+        if (destination.containsKey(toVertex)){
+            return false;
+        }
+
         destination.put(toVertex, newEdge);
-        this.edges.put(fromVertex, destination);
 
-        return false;
+        return true;
     }
 
     /**
