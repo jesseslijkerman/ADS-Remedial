@@ -69,11 +69,16 @@ public class DirectedGraph<V extends Identifiable, E> {
      */
     public Collection<V> getNeighbours(V fromVertex) {
         if (fromVertex == null) return null;
+        Collection<V> neighbours = new ArrayList<>();
+
+        this.edges.get(fromVertex).forEach((v1, e2)  -> {
+            neighbours.add(v1);
+        });
+
 
         // TODO retrieve the collection of neighbour vertices of fromVertex out of the edges data structure
-        this.edges.get(fromVertex);
 
-        return null;
+        return neighbours;
     }
 
     public Collection<V> getNeighbours(String fromVertexId) {
