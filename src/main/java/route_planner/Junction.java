@@ -127,6 +127,31 @@ public class Junction implements Identifiable
         // TODO Add & implement builder methods
 
 
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder location(double locationX, double locationY) {
+            this.locationX = locationX;
+            this.locationY = locationY;
+            return this;
+        }
+
+        public Builder province(String province) {
+            this.province = province;
+            return this;
+        }
+
+        public Builder population(int population) {
+            this.population = population;
+            return this;
+        }
+
+        public Junction build() {
+            return new Junction(this);
+        }
+
     }
 
     // -----------------------------
