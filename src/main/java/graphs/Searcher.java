@@ -75,7 +75,31 @@ public class Searcher {
 
         // TODO calculate the path from start to target by recursive depth-first-search
 
-        return null;
+        boolean found = dfsRecursive(graph, start, target, path);
+        return found ? path : null;
+    }
+
+    private static <V extends Identifiable, E> boolean dfsRecursive(DirectedGraph<V, E> graph, V current, V target, DGPath<V> path){
+        // Mark as visited
+        path.getVisited().add(current);
+
+        //
+        if (current.equals(target)){
+            return true;
+        }
+
+        // Search every unvisited neighbour
+        Collection<V> neighbours = graph.getNeighbours(current);
+        if (neighbours != null){
+            for (V neighbour : neighbours){
+                if (!path.getVisited().contains(neighbour)){
+                    boolean found = dfsRecursive(graph, neighbour, target, path);
+                    if (found) return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 
