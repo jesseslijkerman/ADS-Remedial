@@ -1,5 +1,6 @@
 package graphs;
 
+
 import java.util.*;
 import java.util.function.Function;
 
@@ -82,6 +83,7 @@ public class Searcher {
     private static <V extends Identifiable, E> boolean dfsRecursive(DirectedGraph<V, E> graph, V current, V target, DGPath<V> path){
         // Mark as visited
         path.getVisited().add(current);
+        path.getVertices().add(current);
 
         //
         if (current.equals(target)){
@@ -130,6 +132,41 @@ public class Searcher {
         }
 
         // TODO calculate the path from start to target by breadth-first-search
+        Map<V, V> parent = new HashMap<>();
+        Queue<V> queue = new ArrayDeque<>();
+        queue.add(start);
+
+        while (!queue.isEmpty()){
+            V current = queue.remove();
+
+            // When the target is found we reconstruct path
+            if (current.equals(target)){
+                // Create path from back to start
+                LinkedList<V> reversed = new LinkedList<>();
+                for (V v = target; v != null; v = parent.get(v)) {
+                    reversed.addFirst(v);
+                }
+
+                // reverse back to right order, start -> target
+                Collections.reverse(reversed);
+
+                // store it in our DGPath
+                for (V v : reversed) {
+                    path.getVertices().add(v);
+                }
+
+                return path;
+            }
+
+            for (V neighbour : graph.getNeighbours(current)){
+                if (!path.getVisited().contains(neighbour)){
+                    path.getVisited().add(neighbour);
+                    parent.put(neighbour, current);
+                    queue.add(neighbour);
+                }
+            }
+        }
+
 
         return null;
     }
