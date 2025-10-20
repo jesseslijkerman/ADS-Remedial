@@ -141,18 +141,9 @@ public class Searcher {
 
             // When the target is found we reconstruct path
             if (current.equals(target)){
-                // Create path from back to start
-                LinkedList<V> reversed = new LinkedList<>();
+                // Create path
                 for (V v = target; v != null; v = parent.get(v)) {
-                    reversed.addFirst(v);
-                }
-
-                // reverse back to right order, start -> target
-                Collections.reverse(reversed);
-
-                // store it in our DGPath
-                for (V v : reversed) {
-                    path.getVertices().add(v);
+                    path.getVertices().addFirst(v);
                 }
 
                 return path;
@@ -228,16 +219,56 @@ public class Searcher {
         nextDspNode.weightSumTo = 0.0;
         progressData.put(start, nextDspNode);
 
-        while (nextDspNode != null) {
+        // use a priority queue so we always grab the vertex with smallest current distance
+        PriorityQueue<DSPNode<V>> queue = new PriorityQueue<>();
+        queue.add(nextDspNode);
 
-            // TODO continue Dijkstra's algorithm to process nextDspNode
-            //  mark nodes as you complete their processing
-            //  register all visited vertices while going for statistical purposes
-            //  if you hit the target: complete the path and bail out !!!
+        while (!queue.isEmpty()) {
+            DSPNode<V> current = queue.poll();
 
+            // skip nodes we’ve already finalized
+            if (current.marked) continue;
+            current.marked = true;
+            path.visited.add(current.vertex);
 
-            /// TODO find the next nearest node that is not marked yet
+            // if we hit the target — stop early!
+            if (current.vertex.equals(target)) {
+                // rebuild the shortest path by walking backwards
+                LinkedList<V> reversedPath = new LinkedList<>();
+                DSPNode<V> temp = current;
+                while (temp != null) {
+                    reversedPath.addFirst(temp.vertex);
+                    temp = (temp.fromVertex == null) ? null : progressData.get(temp.fromVertex);
+                }
 
+                // add the vertices to DGPath
+                for (V v : reversedPath) {
+                    path.vertices.add(v);
+                }
+
+                path.totalWeight = current.weightSumTo;
+                return path;
+            }
+
+            // check all neighbors of the current vertex
+            for (V neighbor : graph.getNeighbours(current.vertex)) {
+                E edge = graph.getEdge(current.vertex, neighbor);
+                if (edge == null) continue;
+
+                double weight = weightMapper.apply(edge);
+                double newDistance = current.weightSumTo + weight;
+
+                // get or create DSPNode for neighbor
+                DSPNode<V> neighborNode = progressData.getOrDefault(neighbor, new DSPNode<>(neighbor));
+
+                // if we found a shorter path to this neighbor, update it
+                if (newDistance < neighborNode.weightSumTo) {
+                    neighborNode.weightSumTo = newDistance;
+                    neighborNode.fromVertex = current.vertex;
+                    progressData.put(neighbor, neighborNode);
+                    queue.add(neighborNode);
+                }
+            }
         }
 
 
