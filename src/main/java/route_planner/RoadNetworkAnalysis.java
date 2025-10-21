@@ -2,6 +2,7 @@ package route_planner;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility class that provides analysis methods for junctions (cities) and roads.
@@ -24,6 +25,7 @@ public class RoadNetworkAnalysis {
     public List<Junction> citiesInSameProvince(Junction city) {
         // TODO: Implement this method using Java Streams
 
+
         return null;
     }
 
@@ -31,9 +33,10 @@ public class RoadNetworkAnalysis {
      * Calculates the total length of all roads.
      */
     public double totalRoadLength() {
-        // TODO: Implement this method using Java Streams
+        // TODO: Implement this method using Java Stream
 
-        return 0.0;
+
+        return this.roadNetwork.values().stream().mapToDouble(Road::getLength).sum();
     }
 
     /**
@@ -42,7 +45,16 @@ public class RoadNetworkAnalysis {
     public List<String> top5CityNamesByPopulation() {
         // TODO: Implement this method using Java Streams
 
-        return null;
+       return
+               // Stream from all the cities
+               this.roadNetwork.keySet().stream()
+                       // sorted on the population and the reverse is that the biggest numbers comes on top.
+                       .sorted(Comparator.comparing(Junction::getPopulation).reversed())
+                       // a limit of the 5 biggest numbers
+                       .limit(5)
+                       // Returns only the city name
+                       .map(Junction::getName)
+                       .toList();
     }
 
     /**
@@ -72,9 +84,14 @@ public class RoadNetworkAnalysis {
      * Returns all roads where the speed limit is higher than the average speed limit.
      */
     public List<Road> roadsFasterThanAverage() {
-        // TODO: Implement this method using Java Streams
-
-        return null;
+//        // TODO: Implement this method using Java Streams
+//        double average  = this.roadNetwork.values().stream()
+//                .mapToDouble(Road::getMaxSpeed).average().getAsDouble();
+//
+//
+//        return this.roadNetwork.keySet().stream()
+//                .filter(r -> r  average)
+//                .;
     }
 
     /**
