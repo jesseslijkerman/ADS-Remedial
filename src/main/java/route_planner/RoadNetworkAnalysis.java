@@ -1,6 +1,8 @@
 package route_planner;
 
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -16,15 +18,20 @@ public class RoadNetworkAnalysis {
     public RoadNetworkAnalysis(Map<Junction, Road> connections) {
         this.roadNetwork = connections;
     }
+    public String filePath = System.getProperty("user.dir");
 
     /**
      * Finds all cities (junctions) in the same province as the given city.
      * Returns an empty list if no cities match.
      */
-    public List<Junction> citiesInSameProvince(Junction city) {
+    public List<Junction> citiesInSameProvince(Junction city)  {
         // TODO: Implement this method using Java Streams
+        List <Junction> junctions = new ArrayList<>();
 
-        return null;
+        this.roadNetwork.forEach((junction, road) -> {junctions.add(junction);});
+
+        return junctions.stream().filter(j -> j.getProvince().equals(city.getProvince()))
+                .filter(j -> !j.equals(city)).toList();
     }
 
     /**
@@ -50,8 +57,10 @@ public class RoadNetworkAnalysis {
      */
     public double totalLengthFromBigCities(int minPopulation) {
         // TODO: Implement this method using Java Streams
-
-        return 0.0;
+        return roadNetwork.entrySet().stream()
+                .filter(entry -> entry.getKey().getPopulation() >= minPopulation)
+                .mapToDouble(entry -> entry.getValue().getLength())
+                .sum();
     }
 
     /**
