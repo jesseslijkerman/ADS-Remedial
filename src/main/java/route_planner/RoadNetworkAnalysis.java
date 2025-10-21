@@ -2,7 +2,6 @@ package route_planner;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Utility class that provides analysis methods for junctions (cities) and roads.
@@ -22,9 +21,14 @@ public class RoadNetworkAnalysis {
      * Finds all cities (junctions) in the same province as the given city.
      * Returns an empty list if no cities match.
      */
-    public List<Junction> citiesInSameProvince(Junction city) {
+    public List<Junction> citiesInSameProvince(Junction city)  {
         // TODO: Implement this method using Java Streams
+        List <Junction> junctions = new ArrayList<>();
 
+        this.roadNetwork.forEach((junction, road) -> {junctions.add(junction);});
+
+        return junctions.stream().filter(j -> j.getProvince().equals(city.getProvince()))
+                .filter(j -> !j.equals(city)).toList();
 
         return null;
     }
@@ -33,7 +37,7 @@ public class RoadNetworkAnalysis {
      * Calculates the total length of all roads.
      */
     public double totalRoadLength() {
-        // TODO: Implement this method using Java Stream
+        // TODO: Implement this method using Java Streams
 
 
         return this.roadNetwork.values().stream().mapToDouble(Road::getLength).sum();
@@ -62,8 +66,10 @@ public class RoadNetworkAnalysis {
      */
     public double totalLengthFromBigCities(int minPopulation) {
         // TODO: Implement this method using Java Streams
-
-        return 0.0;
+        return roadNetwork.entrySet().stream()
+                .filter(entry -> entry.getKey().getPopulation() >= minPopulation)
+                .mapToDouble(entry -> entry.getValue().getLength())
+                .sum();
     }
 
     /**
