@@ -2,6 +2,7 @@ package route_planner;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility class that provides analysis methods for junctions (cities) and roads.
@@ -29,8 +30,6 @@ public class RoadNetworkAnalysis {
 
         return junctions.stream().filter(j -> j.getProvince().equals(city.getProvince()))
                 .filter(j -> !j.equals(city)).toList();
-
-        return null;
     }
 
     /**
@@ -40,7 +39,7 @@ public class RoadNetworkAnalysis {
         // TODO: Implement this method using Java Streams
 
 
-        return this.roadNetwork.values().stream().mapToDouble(Road::getLength).sum();
+        return roadNetwork.values().stream().mapToDouble(Road::getLength).sum();
     }
 
     /**
@@ -51,7 +50,7 @@ public class RoadNetworkAnalysis {
 
        return
                // Stream from all the cities
-               this.roadNetwork.keySet().stream()
+               roadNetwork.keySet().stream()
                        // sorted on the population and the reverse is that the biggest numbers comes on top.
                        .sorted(Comparator.comparing(Junction::getPopulation).reversed())
                        // a limit of the 5 biggest numbers
@@ -82,7 +81,10 @@ public class RoadNetworkAnalysis {
     public Map<String, Double> totalRoadLengthPerProvince() {
         // TODO: Implement this method using Java Streams
 
-        return null;
+
+        return this.roadNetwork.entrySet().stream()
+                .collect(Collectors.groupingBy(entry -> entry.getKey().getProvince(),
+                        Collectors.summingDouble(entry -> entry.getValue().getLength())));
     }
 
 
@@ -90,14 +92,12 @@ public class RoadNetworkAnalysis {
      * Returns all roads where the speed limit is higher than the average speed limit.
      */
     public List<Road> roadsFasterThanAverage() {
-//        // TODO: Implement this method using Java Streams
-//        double average  = this.roadNetwork.values().stream()
-//                .mapToDouble(Road::getMaxSpeed).average().getAsDouble();
-//
-//
-//        return this.roadNetwork.keySet().stream()
-//                .filter(r -> r  average)
-//                .;
+        // TODO: Implement this method using Java Streams
+        double average  = this.roadNetwork.values().stream()
+                .mapToDouble(Road::getMaxSpeed).average().getAsDouble();
+
+        return this.roadNetwork.values().stream().filter(road -> road.equals(average))
+                .toList();
     }
 
     /**
@@ -107,6 +107,11 @@ public class RoadNetworkAnalysis {
     public List<String> provincesWithMoreThanXCities(int x) {
         // TODO: Implement this method using Java Streams
 
-        return null;
+
+     return this.roadNetwork.keySet().stream()
+             .collect(Collectors.groupingBy(junction -> junction.getProvince(), Collectors.counting()))
+             .entrySet().stream().filter(entry -> entry.getValue() > x)
+             .map(Map.Entry::getKey)
+             .toList();
     }
 }
