@@ -42,7 +42,16 @@ public class SorterPerformanceTest {
 
         long startTime = System.nanoTime();
 
-         new Sorter<Country>().quickSort(countries, Comparator.comparing(Country::getName));
+         List<Country> expected = new ArrayList<>(countries);
+         Collections.sort(expected,  Comparator.comparing(Country::getName));
+
+         List<Country> actual = new ArrayList<>(countries);
+         new Sorter<Country>().quickSort(actual, Comparator.comparing(Country::getName));
+
+         if (!expected.equals(actual)) {
+             throw new AssertionError("Sort result doesn't match");
+         }
+
 //         new Sorter<Country>().insertionSort( countries, Comparator.comparing(Country::getName));
 
 
