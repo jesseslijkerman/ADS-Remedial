@@ -1,11 +1,9 @@
 package graphs;
 
 import org.junit.jupiter.api.Test;
+import route_planner.Junction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Performance benchmarking utility for comparing Insertion Sort vs QuickSort algorithms.
@@ -22,19 +20,56 @@ import java.util.Random;
  */
 public class SorterPerformanceTest {
 
-    private static final long SEED = 20211220L;
-    private static final Random RANDOM = new Random(SEED);
+        private static final long SEED = 20211220L;
+        private static final Random RANDOM = new Random(SEED);
+        public static void main(String[] args) {
+            List<Country> countryList = generateCountryDataset(5000000);
+            int[] sizes = {100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200, 102400, 204800, 409600, 819200, 1638400, 3276800, 5000000};
+
+            for (int size : sizes) {
+                measureEfficiency(size, countryList);
+            }
+        }
 
 
-    @Test
-    void measureEfficiency() {
+    static void measureEfficiency(int size, List<Country> countryList) {
         // TODO Benchmarking code here...
+        List<Country> countries =  new ArrayList<>(countryList.subList(0, size));
+
+        // Run with -Xint JVM parameter to disable JIT compilation
+        System.setProperty("java.vm.execution-mode", "int");
+
+
+        long startTime = System.nanoTime();
+
+         new Sorter<Country>().quickSort(countries, Comparator.comparing(Country::getName));
+//         new Sorter<Country>().insertionSort( countries, Comparator.comparing(Country::getName));
+
+
+
+        long endTime = System.nanoTime();
+        long overTime = secondsToNanoseconds(20);
+
+        long duration = (endTime - startTime) / 1_000_000; // naar ms
+        System.out.println("Insertion Sort - Size: " + size + ", time " + duration + " ms" );
+
+
+        if (endTime - startTime > overTime) {
+            System.out.println("The time is greater then 20 sec");
+            return;
+        }
+
+
+        // Reset the execution mode property
+        System.clearProperty("java.vm.execution-mode");
+
+        System.gc();
 
     }
 
 
     // Private helper method
-    private List<Country> generateCountryDataset(int size) {
+    private static List<Country> generateCountryDataset(int size) {
         List<Country> countries = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             String name = "Country_" + String.format("%06d", i);
@@ -44,5 +79,7 @@ public class SorterPerformanceTest {
         Collections.shuffle(countries, RANDOM); // same seed = same shuffle
         return countries;
     }
-
+    public static long secondsToNanoseconds(long seconds) {
+        return seconds * 1_000_000_000L;
+    }
 }
