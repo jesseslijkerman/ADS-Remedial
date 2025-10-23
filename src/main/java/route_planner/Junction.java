@@ -4,6 +4,7 @@ import graphs.Identifiable;
 
 import java.io.PrintStream;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Junction implements Identifiable
         // TODO extend superclass and/or implement interfaces
@@ -53,6 +54,18 @@ public class Junction implements Identifiable
         return population;
     }
 
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Junction other = (Junction) obj;
+        return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 
     // -----------------------------
     // Utility methods
