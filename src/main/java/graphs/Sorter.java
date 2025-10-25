@@ -16,21 +16,23 @@ public class Sorter<E> {
      **/
     public List<E> insertionSort(List<E> items, Comparator<E> comparator) {
         // TODO implement selection sort or insertion sort or bubble sort
+        // go through the list starting at index 1
+        for (int i = 1; i < items.size(); i++) {
+            E current = items.get(i);   // the item we want to insert
+            int j = i - 1;
 
-         int n = items.size();
-         for (int i = 1;  i < n; i++) {
-             E k = items.get(i);
-             int j = i - 1;
+            // move elements that are greater than 'current' one position ahead
+            // so we can make space for 'current'
+            while (j >= 0 && comparator.compare(items.get(j), current) > 0) {
+                items.set(j + 1, items.get(j)); // shift the element right
+                j--;
+            }
 
-             while (j >= 0 && comparator.compare(items.get(j), k) > 0) {
-                 items.set(j + 1, items.get(j));
-                 j--;
-             }
+            // put the current element into its correct position
+            items.set(j + 1, current);
+        }
 
-             items.set(j+1, k);
-         }
-
-        return items;   // replace as you find appropriate
+        return items;
 
     }
 
