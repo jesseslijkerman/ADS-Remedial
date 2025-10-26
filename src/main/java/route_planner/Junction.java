@@ -124,7 +124,7 @@ public class Junction implements Identifiable
 
     @Override
     public String getId() {
-        return null;
+        return name;
     }
 
     /**
