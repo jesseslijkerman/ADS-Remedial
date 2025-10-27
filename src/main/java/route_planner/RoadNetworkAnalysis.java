@@ -93,6 +93,10 @@ public class RoadNetworkAnalysis {
      */
     public List<Road> roadsFasterThanAverage() {
         // TODO: Implement this method using Java Streams
+        if (roadNetwork.isEmpty()){
+            return List.of();
+        }
+
         double average  = this.roadNetwork.values().stream()
                 .mapToDouble(Road::getMaxSpeed).average().getAsDouble();
 
@@ -105,9 +109,6 @@ public class RoadNetworkAnalysis {
      * Use Collectors.groupingBy(), Collectors.counting(),
      */
     public List<String> provincesWithMoreThanXCities(int x) {
-        // TODO: Implement this method using Java Streams
-
-
      return this.roadNetwork.keySet().stream()
              .collect(Collectors.groupingBy(junction -> junction.getProvince(), Collectors.counting()))
              .entrySet().stream().filter(entry -> entry.getValue() > x)
