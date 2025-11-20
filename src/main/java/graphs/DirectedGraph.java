@@ -71,6 +71,7 @@ public class DirectedGraph<V extends Identifiable, E> {
         if (fromVertex == null || !this.vertices.containsKey(fromVertex.getId())) return null;
         Collection<V> neighbours = new ArrayList<>();
 
+        // Retrieve edges that have fromVertex as their toVertex and add to list
         this.edges.get(fromVertex).forEach((v1, e2)  -> {
             neighbours.add(v1);
         });
@@ -96,7 +97,6 @@ public class DirectedGraph<V extends Identifiable, E> {
      * @return whether the edge has been added successfully
      */
     public boolean addEdge(V fromVertex, V toVertex, E newEdge) {
-        // TODO add (directed) newEdge to the graph between fromVertex and toVertex
         if (fromVertex == null || toVertex == null || newEdge == null) return false;
         // Make sure both vertices are part of the graph
         fromVertex = addOrGetVertex(fromVertex);
@@ -106,6 +106,7 @@ public class DirectedGraph<V extends Identifiable, E> {
         // This is a reference to the map stored in 'edges'
         Map<V, E> destination = edges.get(fromVertex);
 
+        // Check if connection already exists
         if (destination.containsKey(toVertex)){
             return false;
         }
@@ -147,7 +148,6 @@ public class DirectedGraph<V extends Identifiable, E> {
     public Collection<E> getEdges(V fromVertex) {
         if (fromVertex == null || !this.vertices.containsKey(fromVertex.getId())) return null;
 
-        // TODO retrieve the collection of out-going edges which connect fromVertex with a neighbour in the edges data structure
         Collection<E> vertexEdges = new ArrayList<>();
 
         this.edges.get(fromVertex).forEach((v1, e2)  -> {

@@ -56,16 +56,25 @@ public class SinglyLinkedList<E> implements Iterable<E> {
         // If the Linked list is empty we set the new node as the head of the list.
         if (head == null) {
             head = newNode;
+            tail = newNode;
         }
 
         else {
             Node<E> curr = head;
 
+            // Move forward until last node
             while (curr.next != null) {
                 curr = curr.next;
             }
+
+            // Now curr is the last node, attach newNode after
             curr.next = newNode;
+
+            // Link backwards as well
             newNode.prev = curr;
+
+            // Update tail since we added a new last element.
+            tail = newNode;
         }
         size++;
     }
@@ -93,7 +102,6 @@ public class SinglyLinkedList<E> implements Iterable<E> {
             head.prev = newNode;
             // newNode becomes the first element
             head = newNode;
-
         }
         size++;
     }
@@ -117,7 +125,7 @@ public class SinglyLinkedList<E> implements Iterable<E> {
             throw new IndexOutOfBoundsException("Index " + index + "Is out of bounds" );
         }
 
-        // compares the location of pos with the location of the index to try to find the wright location
+        // compares the location of pos with the location of the index to try to find the right location
         while (pos < index) {
             curr = curr.next;
             pos++;

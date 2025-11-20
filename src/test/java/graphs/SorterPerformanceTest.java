@@ -46,21 +46,19 @@ public class SorterPerformanceTest {
          Collections.sort(expected,  Comparator.comparing(Country::getName));
 
          List<Country> actual = new ArrayList<>(countries);
+
          new Sorter<Country>().quickSort(actual, Comparator.comparing(Country::getName));
+         // new Sorter<Country>().insertionSort(actual, Comparator.comparing(Country::getName));
 
          if (!expected.equals(actual)) {
              throw new AssertionError("Sort result doesn't match");
          }
 
-//         new Sorter<Country>().insertionSort( countries, Comparator.comparing(Country::getName));
-
-
-
         long endTime = System.nanoTime();
         long overTime = secondsToNanoseconds(20);
 
         long duration = (endTime - startTime) / 1_000_000; // naar ms
-        System.out.println("Insertion Sort - Size: " + size + ", time " + duration + " ms" );
+        System.out.println("Quick Sort - Size: " + size + ", time " + duration + " ms" );
 
 
         if (endTime - startTime > overTime) {

@@ -163,7 +163,6 @@ public class Searcher {
     }
 
     // helper class to build the spanning tree of visited vertices in dijkstra's shortest path algorithm
-    // your may change this class or delete it altogether follow a different approach in your implementation
     private static class DSPNode<V> implements Comparable<DSPNode<V>> {
         protected V vertex;                // the graph vertex that is concerned with this DSPNode
         protected V fromVertex = null;     // the parent's node vertex that has an edge towards this node's vertex
@@ -211,7 +210,6 @@ public class Searcher {
         }
 
         // keep track of the DSP status of all visited nodes
-        // you may choose a different approach of tracking progress of the algorithm, if you wish
         Map<V, DSPNode<V>> progressData = new HashMap<>();
 
         // initialise the progress of the start node
@@ -231,7 +229,7 @@ public class Searcher {
             current.marked = true;
             path.visited.add(current.vertex);
 
-            // if we hit the target — stop early!
+            // if we hit the target stop early
             if (current.vertex.equals(target)) {
                 // rebuild the shortest path by walking backwards
                 LinkedList<V> reversedPath = new LinkedList<>();
@@ -272,7 +270,7 @@ public class Searcher {
         }
 
 
-        // no path found, graph was not connected ???
+        // no path found
         return null;
     }
 }
